@@ -12,7 +12,7 @@ def SODA_part(data,gridsize):
     print("Gridsize:",gridsize)
     
     from pyT2FTS.SODA import SODA_function 
-    
+                
     soda_idx = SODA_function(data,gridsize)
                 
     dados_idx = DataFrame(soda_idx,columns=['idx'])

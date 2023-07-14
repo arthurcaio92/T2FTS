@@ -335,6 +335,24 @@ def operador_intersecao_uniao(n_amostras,conj_ativ_close,conj_ativ_lower,conj_at
     return regras_gerais_int,dict_int,regras_gerais_union,dict_union
 
 
+# Define the function to return the SMAPE value
+def calculate_smape(actual, predicted) -> float:
+  
+    # Convert actual and predicted to numpy
+    # array data type if not already
+    if not all([isinstance(actual, np.ndarray), 
+                isinstance(predicted, np.ndarray)]):
+        actual, predicted = np.array(actual),
+        np.array(predicted)
+  
+    return round(
+        np.mean(
+            np.abs(predicted - actual) / 
+            ((np.abs(predicted) + np.abs(actual))/2)
+        )*100, 2
+    )
+
+
 def error_metrics(teste,previsao): 
     """
     Calcula metricas de erro para a previsao. 
@@ -360,6 +378,9 @@ def error_metrics(teste,previsao):
                    
     mape = mape_function(teste, previsao)
     print("MAPE", mape)
+    
+    smape = calculate_smape(teste, previsao)
+    print("SMAPE", smape)
       
     mse = mean_squared_error(teste, previsao)
     print("MSE:", mse)
@@ -373,7 +394,7 @@ def error_metrics(teste,previsao):
     ndei = rmse/np.std(previsao)   #O NDEI é rmse dividido pelo desvio padrao
     print("NDEI: ", ndei)  
     
-    lista_erros = [udetheil,mape,mse,rmse,mae,ndei]
+    lista_erros = [udetheil,smape,mse,rmse,mae,ndei]
             
     return lista_erros
 

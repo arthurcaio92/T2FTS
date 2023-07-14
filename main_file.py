@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from pyT2FTS.sliding_window import run_sliding_window
+from pyT2FTS.Gridsearch import run_Gridsearch
 from pyT2FTS.datasets import get_TAIEX,get_NASDAQ,get_Brent_Oil,get_SP500
 import numpy as np
 import pandas as pd
@@ -43,18 +44,18 @@ taiex_df = get_TAIEX()
 taiex = taiex_df.avg               
 taiex = taiex.to_numpy() 
 """
-nasdaq_df = get_NASDAQ()
-nasdaq = nasdaq_df.avg               
-nasdaq = nasdaq.to_numpy()  
+taiex_df = get_TAIEX()
+taiex = taiex_df.avg               
+taiex = taiex.to_numpy()
 
 
 '------------------------------------------------ Gridsearch Parameters -------------------------------------------------'
 
 
-datasets = [nasdaq]
-dataset_names = ['nasdaq']
+datasets = [taiex]
+dataset_names = ['taiex']
 diff = 1                                #If diff = 1, data is differentiated
-partition_parameters = np.arange(5,6)            #partiions must be a list
+partition_parameters = np.arange(1,11)            #partiions must be a list
 orders = [1]
 partitioners = ['SODA']                 #partitioners: 'chen' 'SODA' 'ADP' 'DBSCAN' 'CMEANS' 'entropy' 'FCM'  
 mfs = ['triangular']                    #mfs: 'triangular' ou 'trapezoidal' ou 'gaussian'
@@ -176,31 +177,118 @@ klang[:731]
 klang_df = pd.read_csv('kalang.csv')
 klang = klang_df['value']
 klang = klang.to_numpy()
-"""
+
 
 df_brent_oil = get_Brent_Oil()
 brent_oil = df_brent_oil.Price  
 brent_oil = brent_oil.to_numpy()
 
-"""
+
 plt.figure(figsize = (8,4))
 plt.plot(brent_oil)
 plt.xlabel("Samples")
 plt.ylabel("Brent Oil Prices (US$/Barrel)")
 """
 
+"""
+
+nikkei_df = pd.read_csv('data/Nikkei225.csv')
+nikkei = nikkei_df['Volume']
+nikkei = nikkei.to_numpy()
+
+nikkei_certo = []
+for x in nikkei:
+    if str(x) != 'nan':
+        nikkei_certo.append(x)
+        
+nikkei225 = np.array(nikkei_certo)
+
+plt.plot(nikkei225)
+
+"""
+
+"""
+sp500_df = get_SP500()
+sp500_slice = sp500_df[13586:16607]
+sp500_slice = sp500_slice.reset_index()
+sp500_slice = sp500_slice.drop(['index'], axis= 1)
+sp500 = sp500_slice.Avg               
+sp500 = sp500.to_numpy()  
+
+g = sp500_slice.groupby(pd.Grouper(key='Date', freq='Y'))
+taiex_df_mes = [group for _,group in g]
+
+
+sbi_df = pd.read_excel('data/SBI.xlsx')
+sbi = sbi_df['SBI']
+sbi = sbi.to_numpy()
+
+
+enroll_df = pd.read_excel('data/Enrollments.xlsx')
+enrollments = enroll_df['Enrollments']
+enrollments = enrollments.to_numpy()
+
+
+car_df = pd.read_excel('data/Car_sells.xlsx')
+car = car_df['Tsdata']
+car = car.to_numpy()
+
+car_sell = []
+for c in car:
+    car_sell.append(int(c))
+car_sell = np.array(car_sell)
+
+
+
+"sunspot.year"
+
+
+sunspots_anual_df = pd.read_excel('data/sunspots_anual.xlsx')
+sunspots_anual = sunspots_anual_df["sunspot"]
+sunspots_anual = sunspots_anual.to_numpy()
+
+enroll_df = pd.read_excel('data/Enrollments.xlsx')
+enrollments = enroll_df['Enrollments']
+enrollments = enrollments.to_numpy()
+
+df_brent_oil = get_Brent_Oil()
+brent_oil = df_brent_oil.Price  
+brent_oil = brent_oil.to_numpy()
+
+
+ 
+
+sunspots_anual_df = pd.read_excel('data/sunspots_anual.xlsx')
+sunspots_anual = sunspots_anual_df["sunspot"]
+sunspots_anual = sunspots_anual.to_numpy()
+
+enroll_df = pd.read_excel('data/Enrollments.xlsx')
+enrollments = enroll_df['Enrollments']
+enrollments = enrollments.to_numpy()
+
+df_brent_oil = get_Brent_Oil()
+brent_oil = df_brent_oil.Price  
+brent_oil = brent_oil.to_numpy()
+
+"""
+df_brent_oil = get_Brent_Oil()
+brent_oil = df_brent_oil.Price  
+brent_oil = brent_oil.to_numpy()
+
+
+
 
 datasets = [brent_oil]
 dataset_names = ['brent_oil']
 diff = 1                                #If diff = 1, data is differentiated
-partition_parameters = np.arange(5,6)            #partiions must be a list
+partition_parameters = np.arange(1,6)            #partiions must be a list
 orders = [1]
-partitioners = ['ADP_ANTIGO']                 #partitioners: 'chen' 'SODA' 'ADP' 'DBSCAN' 'CMEANS' 'entropy' 'FCM'  
-mfs = ['trapezoidal']                    #mfs: 'triangular' ou 'trapezoidal' ou 'gaussian'
+partitioners = ['SODA','ADP']                 #partitioners: 'chen' 'SODA' 'ADP' 'DBSCAN' 'CMEANS' 'entropy' 'FCM'  
+mfs = ['triangular']                    #mfs: 'triangular' ou 'trapezoidal' ou 'gaussian'
 
 
 '------------------------------------------------ Running the model -------------------------------------------------'
 
 
 'Builds and runs the model'
-run_Gridsearch(datasets,dataset_names,diff,partition_parameters,orders,partitioners,mfs,training = 0.7)
+melhor_modelo = run_Gridsearch(datasets,dataset_names,diff,partition_parameters,orders,partitioners,mfs,training = 0.7)

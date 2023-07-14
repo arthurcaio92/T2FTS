@@ -133,7 +133,7 @@ def run_sliding_window(datasets,dataset_names,diff,partition_parameters,orders,p
                             order = lag
                             
                                             
-                            lista_erros,n_sets,FLR,FLRG = T2FTS(dados,method_part,mf_type,part_param,order=order,diff=diff,training=training)
+                            lista_erros,n_sets,FLR,FLRG,proximo_valor_previsto = T2FTS(dados,method_part,mf_type,part_param,order=order,diff=diff,training=training)
                            
                             print("---------------------------------")
                                
@@ -321,7 +321,7 @@ def run_sliding_window(datasets,dataset_names,diff,partition_parameters,orders,p
                 df_general.to_excel(writer, sheet_name='General errors',index = False)
                 df_specific.to_excel(writer, sheet_name='Especific errors',index = False)
                
-                writer.save()
+                writer.close()
                 
                 #Downloads the Excel file to computer
                 #from google.colab import files

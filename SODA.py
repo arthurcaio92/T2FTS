@@ -190,9 +190,9 @@ def cloud_member_recruitment(ModelNumber,Center_samples,Uniquesample,grid_trad,g
         Count.append(len(seq))
         Membership[:Count[i]:,i] = seq
         'formato list comprehension so funciona para numpy < 1.18.5'
-        #for j in seq:
-            #Members[:Count[i]:,W*i:W*(i+1)] = Uniquesample[j]
-        Members[:Count[i]:,W*i:W*(i+1)] = [Uniquesample[j] for j in seq]
+        for j in seq:
+            Members[:Count[i]:,W*i:W*(i+1)] = Uniquesample[j]
+        #Members[:Count[i]:,W*i:W*(i+1)] = [Uniquesample[j] for j in seq]
     MemberNumber = Count
     
     #Converte a matriz para vetor E SOMA +1 PARA NAO TER CONJUNTO 0'
@@ -329,6 +329,7 @@ def SODA_function(dados, gridsize):
     data = np.matrix(dados)
 
     distances = ['euclidean'];
+    
                 
 
     for d in distances:

@@ -38,20 +38,36 @@ def T2FTS(data,method_part,mf_type,partition_parameters,order,diff,training):
     test_data = teste_df.Close.to_numpy()   
     
     """
-    
+        
     if training == 1:   #(INFO PERFEITA)
         training_data = data
         test_data = data
     else:
+        
+        
    
         'Training takes % of the data'
         training_interval = int(training * len(data))     
 
         training_data = data[:training_interval]
-      
-        'Testing takes the remaining 20%'
-        test_data = data[training_interval:]
+        
+        """
+        #SE TIVER DADOS DE VALIDAÇÃO
+        #obs: comentar a linha test_data = data[training_interval:]
+        
+        test = 0.15
+        test_interval = int(test * len(data))  
+        test_interval = test_interval * (-1)
+        test_interval = test_interval - 1
+        
+        'Testing takes the remaining %'
+        test_data = data[test_interval:]
+        """
+        
 
+        'Testing takes the remaining %'
+        test_data = data[training_interval:]
+        
         
         
        
@@ -122,7 +138,6 @@ def T2FTS(data,method_part,mf_type,partition_parameters,order,diff,training):
         number_of_sets = len(huarng_params)
         modelo.generate_uneven_length_mfs(number_of_sets,huarng_params)
         
-
         
     else:
         raise Exception("Method %s not implemented" % method_part)
@@ -154,11 +169,14 @@ def T2FTS(data,method_part,mf_type,partition_parameters,order,diff,training):
     if diff == True:
         forecast_result = forecast_result[1:] #faz isso por causa da diferenciação
         forecast_result = tdiff.inverse(forecast_result,test_data_orig)
+        proximo_valor_previsto = forecast_result[-1] #Esse é o proximo valor previsto da serie
         test_data = test_data_orig[order:]  # Para plotar e metricas de erro deve usar a serie original
         
     else:       
         test_data = test_data[order:]  # O primeiro item nao tem correspondente na previsao
+        proximo_valor_previsto = forecast_result[-1] #Esse é o proximo valor previsto da serie
         forecast_result = forecast_result[:-1]
+        
 
     '------------------------------------------------  Métricas de erro  ------------------------------------------'
     
@@ -181,18 +199,9 @@ def T2FTS(data,method_part,mf_type,partition_parameters,order,diff,training):
 
 
     
-    """
-    PARA TESTES:
-        
-    error_list = 0
-    number_of_sets = 0
-    FLR = 0
-    FLRG = 0
-    """
-    
 
 
-    return error_list,number_of_sets,FLR,FLRG
+    return error_list,number_of_sets,FLR,FLRG,proximo_valor_previsto
 
 
     """ 
