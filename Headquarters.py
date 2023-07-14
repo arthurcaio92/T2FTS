@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from T2FTS import Type2Model,IT2FS_plot,IT2FS_plot_OLD
-from Tools import error_metrics,plot_forecast 
-from Partitioners import SODA_part,ADP_part,ADP_part_antigo,DBSCAN_part,FCM_part,ENTROPY_part,CMEANS_part,HUARNG_part
-from Transformations import Differential
+from pyT2FTS.T2FTS import Type2Model,IT2FS_plot,IT2FS_plot_OLD
+from pyT2FTS.Tools import error_metrics,plot_forecast 
+from pyT2FTS.Partitioners import SODA_part,ADP_part,ADP_part_antigo,DBSCAN_part,FCM_part,ENTROPY_part,CMEANS_part,HUARNG_part
+from pyT2FTS.Transformations import Differential
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
